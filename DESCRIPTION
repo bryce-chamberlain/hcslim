@@ -18,6 +18,4 @@ Imports:
   glue,
   jsonlite,
   shiny
-RoxygenNote: 7.1.0
-Suggests: 
-    testthat
+RoxygenNote: 7.0.2

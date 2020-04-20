@@ -1,12 +1,11 @@
 #' Import Highcharts Libraries
 #'
-#' @param ... Code files to import, minimally defined. For example, to import https://code.highcharts.com/highcharts.js you'd send "highcharts". To import https://code.highcharts.com/modules/accessibility.js you'd send "modules/accessibility".
+#' @param hcpaths Code files to import, minimally defined. For example, to import https://code.highcharts.com/highcharts.js you'd send "highcharts". To import https://code.highcharts.com/modules/accessibility.js you'd send "modules/accessibility".
 #'
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' require(shiny)
 #' ui = basicPage(
 #'   usecode(
 #'     'highcharts',
@@ -14,6 +13,7 @@
 #'     'modules/export-data',
 #'     'modules/accessibility'
 #'   ),
+#' 
 #'   uiOutput('testchart')
 #' )
 #' }
@@ -44,7 +44,6 @@ usecode = function(...){
 #'
 #' @examples
 #' \dontrun{
-#' require(shiny)
 #'server = function(input, output) {
 #'
 #'   output$testchart = renderUI({ tohc( 'testchart', list(
@@ -52,10 +51,7 @@ usecode = function(...){
 #'     title = list(text = 'Monthly Average Temperature'),
 #'     subtitle = list(text = 'Source = WorldClimate.com'),
 #'     xAxis = list(
-#'       categories = c(
-#'          'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 
-#'          'Sep', 'Oct', 'Nov', 'Dec'
-#'       )
+#'       categories = c('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec')
 #'     ),
 #'     yAxis = list(
 #'       title= list(
@@ -77,32 +73,16 @@ usecode = function(...){
 #'     )
 #'   ))
 #'
-#' })
 #' }
 #' }
-hchtml = function(id, options, class=c('chart', 'mapChart', 'stockChart', 'ganttChart'), prettyjs=FALSE){
-  
-  class = match.arg(class)
-  
+hchtml = function(id, options, class = c('chart', 'mapChart', 'stockChart', 'ganttChart'), prettyjs=FALSE){
+
   .checkid(id)
   
   json = jsonlite::toJSON(options, auto_unbox=TRUE, prettyjs=pretty, force=TRUE)
   json = gsub('"JS!([^!]+)!"', '\\1', json)
-  
-  return(shiny::tags$script(glue::glue("Highcharts.{class}('{id}', {json});")))
-  
+
+  shiny::tags$script(glue::glue("Highcharts.{class}('{id}', {json});"))
 }
 
-#' Mark JS
-#' 
-#' Marks Javascript code so hchtml knows how to handle it.
-#'
-#' @param string 
-#'
-#' @return string with Javascript marked.
-#' @export
-#'
-#' @examples
-markjs = function(string){
-  return(glue::glue('JS!{string}!'))
-}
+markjs = function(string) glue('JS!{string}!')
